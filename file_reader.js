@@ -15,20 +15,24 @@ const parseProblemInput = (input) => {
     const num_unit_courses = info[1]
 
     let unit_course_registrations = {};
+    let num_students = 0;
 
-    for (let i = 1; i <= num_unit_courses ; i++) {
-        unit_course_registrations[i]= lines[i].split(" "); 
+    for (let i = 0; i < num_unit_courses; i++) {
+        unit_course_registrations[i]= lines[i+1].split(" ");
+        const max_student_num = Math.max(...unit_course_registrations[i]);
+        num_students = max_student_num > num_students ? max_student_num : num_students;
     }
 
-    console.log("Problem Info:\n", "Number of Slots: ", num_slots, "\n Number of Unit Courses: ", num_unit_courses, "\n");
+    console.log("Problem Info:\n", "Number of Slots: ", num_slots, "\n Number of Unit Courses: ", num_unit_courses,"\n Number of Students: ", num_students, "\n");
 
-    for (const unit_course in unit_course_registrations) {
-        console.log("Course ", unit_course, " => ", unit_course_registrations[unit_course]); 
-    }
+    // for (const unit_course in unit_course_registrations) {
+    //     console.log("Course ", unit_course, " => ", unit_course_registrations[unit_course]); 
+    // }
 
     return {
         num_slots,
-        unit_course_registrations
+        unit_course_registrations,
+        num_students
     }
 }
 
