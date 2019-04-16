@@ -11,8 +11,8 @@ const parseProblemInput = (input) => {
     
     const info = lines[0].split(" ");
 
-    const num_slots = info[0]
-    const num_unit_courses = info[1]
+    const num_slots = parseInt(info[0], 10);
+    const num_unit_courses = parseInt(info[1], 10);
 
     let unit_course_registrations = {};
     let num_students = 0;
@@ -31,6 +31,7 @@ const parseProblemInput = (input) => {
 
     return {
         num_slots,
+        num_unit_courses,
         unit_course_registrations,
         num_students
     }
