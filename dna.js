@@ -50,18 +50,20 @@ class DNA {
 
         let mixed_genes = [];
 
-        for (let i = 0; i < this.genes.length; i++) {
-            const selectedChromossome = i % 2 === 0 ? this.genes[i] : partner.genes[i];
+        let i;
+        for (i = 0; i < this.genes.length / 2; i++) {
+            mixed_genes.push(this.genes[i]);
+        }
 
-            mixed_genes.push(selectedChromossome);
-            
+        for (let j = i; j < this.genes.length; j++) {
+            mixed_genes.push(partner.genes[j]);
         }
 
         return new DNA(this.population, mixed_genes)
     }
 
     mutate(mutation_probability) {
-        return this.genes.map((elem) => {
+        this.genes = this.genes.map((elem) => {
             if(Math.random() < mutation_probability) {
                 return Math.round(Math.random() * (this.population.num_slots - 1) + 1);
             } else {

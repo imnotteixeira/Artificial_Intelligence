@@ -2,23 +2,37 @@ const DNA = require("./dna.js");
 
 const GENETIC_PARAMS = Object.freeze({
     POPULATION_SIZE: 2000,
-    MUTATION_RATE: 0.1
+    MUTATION_RATE: 0.01
 })
 
 class Population {
-    constructor(num_unit_courses, num_slots, overlappings, num_students) {
+    
+    constructor(num_unit_courses, num_slots, overlappings, num_students, initial_population) {
         this.num_unit_courses = num_unit_courses;
         this.num_slots = num_slots;
         this.overlappings = overlappings;
         this.num_students = num_students;
         
-        this.population = this.generatePopulation(
-            GENETIC_PARAMS.POPULATION_SIZE, 
-        );
+        if(!initial_population) {
+            this.population = this.generatePopulation(
+                GENETIC_PARAMS.POPULATION_SIZE, 
+            );
+        } else {
+            this.population = initial_population;
+        }
 
         this.num_generations = 1;
         this.mating_pool = [];
         this.population_fitness = [];
+
+        this.best_solution = this.population[0];
+
+        this.population.forEach(individual => {
+            if(individual.fitness > this.best_solution.fitness) {
+                this.best_solution = individual;
+            }
+        });
+
     }
 
     /**
@@ -36,6 +50,38 @@ class Population {
         });
     }
 
+    /**
+     * Main evolution loop. Re generates population until an optmal has been found, or the max generations limit has been reached
+     * @param {*} max_generations 
+     */
+    evolve(max_generations) {
+        let solutions;
+        while((solutions = this.evaluate()).length === 0 && this.num_generations <= max_generations) {
+            console.log('====================================');
+            console.log("Generation: ", this.num_generations);
+            console.log("Fitness Average: ", this.calculateAverageFitness());
+            console.log('====================================');
+            this.calculateFitness();
+            this.naturalSelection();
+            this.generateNextGeneration();
+        }
+
+        if(solutions.length > 0) {
+            console.log('====================================');
+            console.log("Found ", solutions.length, " solutions: ");
+            console.log(solutions.map(elem => elem.genes));
+            console.log('====================================');
+        } else {
+            console.log('====================================');
+            console.log("Couldn't find any optimal solution in the given generation limit. The Best Solution was, however:");
+            console.log(this.best_solution.genes);
+            console.log("Fitness: ", this.best_solution.fitness);
+            console.log('====================================');
+
+        }
+
+
+    }
     
     /**
      * Calculates the relative fitness of every element of the population, storing it in population_fitness
@@ -53,7 +99,6 @@ class Population {
         const total_fitness = this.population.reduce((acc, currentIndividual) => acc + currentIndividual.fitness, 0);
 
         return total_fitness / this.population.length;
-        
     }
 
     /**
@@ -86,7 +131,7 @@ class Population {
     
             const parent_a_idx = this.mating_pool[random_parent_a];
             const parent_b_idx = this.mating_pool[random_parent_b];
-            
+ 
             const parent_a = this.population[parent_a_idx];
             const parent_b = this.population[parent_b_idx];
     
@@ -107,13 +152,14 @@ class Population {
      * Returns true if there is a solution in the population
      */
     evaluate() {
-        const solutions = this.population.filter((individual) => individual.fitness == 1);
+        this.population.forEach(individual => {
+            if(individual.fitness > this.best_solution.fitness) {
+                this.best_solution = individual;
+            }
+        });
 
-        console.log('====================================');
-        console.log("Found ", solutions.length, " solutions: ");
-        console.log(solutions.map(elem => elem.genes));
-        console.log('====================================');
-        return solutions.length > 0;
+        const solutions = this.population.filter((individual) => individual.fitness == 1);
+        return solutions;
     }
 
     /**
