@@ -1,2 +1,2 @@
 # Artificial_Intelligence
-Playing around with AI algorithms, such as genetic algorithms
+Solving Activity 2d for the Artificial Intelligence unit course at FEUP

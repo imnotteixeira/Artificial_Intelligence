@@ -7,15 +7,27 @@ const GENETIC_PARAMS = Object.freeze({
 
 class Population {
     
-    constructor(num_unit_courses, num_slots, overlappings, num_students, initial_population) {
+    constructor(num_unit_courses, num_slots, overlappings, num_students, {initial_population, population_size, mutation_rate}) {
         this.num_unit_courses = num_unit_courses;
         this.num_slots = num_slots;
         this.overlappings = overlappings;
         this.num_students = num_students;
+
+        if(population_size) {
+            this.population_size = population_size;
+        } else {
+            this.population_size = GENETIC_PARAMS.POPULATION_SIZE;
+        }
+
+        if(mutation_rate) {
+            this.mutation_rate = mutation_rate;
+        } else {
+            this.mutation_rate = GENETIC_PARAMS.MUTATION_RATE;
+        }
         
         if(!initial_population) {
             this.population = this.generatePopulation(
-                GENETIC_PARAMS.POPULATION_SIZE, 
+                population_size, 
             );
         } else {
             this.population = initial_population;
@@ -57,28 +69,29 @@ class Population {
     evolve(max_generations) {
         let solutions;
         while((solutions = this.evaluate()).length === 0 && this.num_generations <= max_generations) {
-            console.log('====================================');
-            console.log("Generation: ", this.num_generations);
-            console.log("Fitness Average: ", this.calculateAverageFitness());
-            console.log('====================================');
+            // console.log('====================================');
+            // console.log("Generation: ", this.num_generations);
+            // console.log("Fitness Average: ", this.calculateAverageFitness());
+            // console.log('====================================');
             this.calculateFitness();
             this.naturalSelection();
             this.generateNextGeneration();
         }
 
-        if(solutions.length > 0) {
-            console.log('====================================');
-            console.log("Found ", solutions.length, " solutions: ");
-            console.log(solutions.map(elem => elem.genes));
-            console.log('====================================');
-        } else {
-            console.log('====================================');
-            console.log("Couldn't find any optimal solution in the given generation limit. The Best Solution was, however:");
-            console.log(this.best_solution.genes);
-            console.log("Fitness: ", this.best_solution.fitness);
-            console.log('====================================');
+        return solutions;
+        // if(solutions.length > 0) {
+        //     console.log('====================================');
+        //     console.log("Found ", solutions.length, " solutions: ");
+        //     console.log(solutions.map(elem => elem.genes));
+        //     console.log('====================================');
+        // } else {
+        //     console.log('====================================');
+        //     console.log("Couldn't find any optimal solution in the given generation limit. The Best Solution was, however:");
+        //     console.log(this.best_solution.genes);
+        //     console.log("Fitness: ", this.best_solution.fitness);
+        //     console.log('====================================');
 
-        }
+        // }
 
 
     }
@@ -137,7 +150,7 @@ class Population {
     
             const child = parent_a.cross(parent_b);
             
-            child.mutate(GENETIC_PARAMS.MUTATION_RATE)
+            child.mutate(this.mutation_rate)
             
             next_generation.push(child);
         }

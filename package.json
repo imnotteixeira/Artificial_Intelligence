@@ -1,0 +1,33 @@
+{
+  "name": "genetic_algorithms",
+  "version": "1.0.0",
+  "description": "Solving Activity 2d for the Artificial Intelligence unit course at FEUP",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "stat": "PROFILING_MODE=true node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imnotteixeira/Artificial_Intelligence.git"
+  },
+  "keywords": [
+    "AI",
+    "Genetic",
+    "Algorithms",
+    "Scheduling"
+  ],
+  "author": "Angelo Teixeira",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/imnotteixeira/Artificial_Intelligence/issues"
+  },
+  "homepage": "https://github.com/imnotteixeira/Artificial_Intelligence#readme",
+  "dependencies": {
+    "dotenv": "^7.0.0"
+  },
+  "devDependencies": {
+    "plotly": "^1.0.6"
+  }
+}
