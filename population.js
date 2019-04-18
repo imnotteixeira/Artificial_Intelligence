@@ -30,7 +30,7 @@ class Population {
                 population_size, 
             );
         } else {
-            this.population = initial_population;
+            this.population = initial_population.map((individual)=> new DNA(this, individual));
         }
 
         this.num_generations = 1;
@@ -68,7 +68,7 @@ class Population {
      */
     evolve(max_generations) {
         let solutions;
-        while((solutions = this.evaluate()).length === 0 && this.num_generations <= max_generations) {
+        while((solutions = this.evaluate()).length === 0 && this.num_generations < max_generations) {
             // console.log('====================================');
             // console.log("Generation: ", this.num_generations);
             // console.log("Fitness Average: ", this.calculateAverageFitness());
